@@ -6,5 +6,5 @@ def index(request):
     return HttpResponse("Hello Everyone, Welcome To My Blog")
 
 
-def post_details(request, postID):
-    return HttpResponse(f"Here You Can Read the Details Of the Posts. And The Post ID is {postID}")
+def post_details(request, post_id):
+    return HttpResponse(f"Here You Can Read the Details Of the Posts. And The Post ID is {post_id}")
