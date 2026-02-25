@@ -1,3 +1,12 @@
 body {
     background-color: #cccccc;
 }
+
+ /* Set a fixed height for all cards */
+.fixed-card {
+    height: 300px; /* Change as needed */
+}
+/* Ensure card body scrolls if content overflows */
+.fixed-card .card-body {
+    overflow-y: auto;
+}       
