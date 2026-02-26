@@ -30,7 +30,7 @@
                             <p class="card-text">{{post.content}}.</p>
                             <div class="d-flex justify-content-between">
                                 {% comment %} <a href="/blog/post/{{post.id}}" class="stretched-link"></a> {% endcomment %}
-                                <a href="{% url 'blog:Post Details' post.id post.id %}">Read More</a>
+                                <a href="{% url 'blog:Post Details' post.id %}">Read More</a>
                                 <a class="text-decoration-none text-dark fw-bold" href="#">{{post.tag}}</a>
                             </div>
                         </div>
