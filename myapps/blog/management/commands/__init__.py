@@ -1,0 +1,1 @@
+from .posts_data import Command as PostsDataCommand

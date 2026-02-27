@@ -23,15 +23,15 @@
                 <div class="card-body" >
                     <div class="row">
                         <div class="col-md-4">
-                            <img src="https://via.placeholder.com/300" class="img-fluid" alt="...">
+                            <img src="{{post.img_url}}" style="width: 300; height: 300;" class="img-fluid" alt="...">
                         </div>
                         <div class="col-md-8">
                             <h5 class="card-title">{{post.title}}</h5>
-                            <p class="card-text">{{post.content}}.</p>
+                            <p class="card-text">{{post.content|truncatechars:50}}.</p>
                             <div class="d-flex justify-content-between">
                                 {% comment %} <a href="/blog/post/{{post.id}}" class="stretched-link"></a> {% endcomment %}
-                                <a href="{% url 'blog:Post Details' post.id %}">Read More</a>
-                                <a class="text-decoration-none text-dark fw-bold" href="#">{{post.tag}}</a>
+                                <a href="{% url 'blog:Post Details' slug=post.slug %}">Read More</a>
+                                <a class="text-decoration-none text-dark fw-bold" href="#">{{post.category}}</a>
                             </div>
                         </div>
                     </div>
