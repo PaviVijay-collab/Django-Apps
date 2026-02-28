@@ -16,10 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 
 handler404 = 'myapps.views.custom_not_found_page'
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='blog/')),  # redirect root URL
     path('blog/', include("blog.urls")),
     path('admin/', admin.site.urls),
 ]
