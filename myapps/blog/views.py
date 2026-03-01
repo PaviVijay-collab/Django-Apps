@@ -5,10 +5,11 @@ from django.http import Http404, HttpResponse
 from django.urls import reverse
 from django.db.models.functions import Random
 from django.core.paginator import Paginator
+from django.contrib import messages
 
 # import models
-from blog.models import Post
-from blog.forms import ContactForm
+from .models import Post, AboutUs
+from .forms import ContactForm, RegisterForm
 
 
 import logging
@@ -47,8 +48,7 @@ def post_details(request, slug):
     
     except Post.DoesNotExist:
         raise Http404("Post Does Not Exist!")
-
-
+    
 
 def old_url_redirect(request):
     return redirect(reverse('blog:New Page'))
@@ -61,8 +61,44 @@ def contact_us(request):
     if request.method == "POST":
         form = ContactForm(request.POST)
 
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+
+        logger = logging.getLogger("TESTING")
         if form.is_valid():
-            logger = logging.getLogger("TESTING")
-            logger.debug(f"Form Data is {form.cleaned_data['name']} {form.cleaned_data['email']} {form.cleaned_data['subject']} {form.cleaned_data['message']}")
+            logger.debug(f"Form Data is {form.cleaned_data['name']} {form.cleaned_data['email']} {form.cleaned_data['message']}")
+            success_message = "Your Email has been sent"
+            return render(request, 'blog/contact.html', {'form': form, 'success_message': success_message})
+
+        else:
+            logger.debug("Form Validation Failure")
+
+        return render(request, 'blog/contact.html', {'form': form, 'name': name, 'email': email, 'message': message})
 
     return render(request, 'blog/contact.html')
+
+def about_us(request):
+    about_content = AboutUs.objects.first()
+    if about_content is None or not about_content.content:
+        about_content = "Default content goes here." #Default Text
+
+    else:
+        about_content = about_content.content
+
+    return render(request, 'blog/about.html', {'about_content': about_content})
+
+def register(request):
+    form = RegisterForm()
+
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+
+        if form.is_valid():
+            user = form.save(commit=False) # user data create
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            messages.success(request, "Registration Successfull, You Can log in.")
+        
+
+    return render(request, 'blog/register.html', {'form': form})

@@ -124,7 +124,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    "blog/static"
+    BASE_DIR / "blog/static/blog/"
 ]
 
 LOGGING = {

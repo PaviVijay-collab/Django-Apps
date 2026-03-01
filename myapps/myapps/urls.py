@@ -21,7 +21,7 @@ from django.views.generic import RedirectView
 handler404 = 'myapps.views.custom_not_found_page'
 
 urlpatterns = [
-    path('', RedirectView.as_view(url='blog/')),  # redirect root URL
-    path('blog/', include("blog.urls")),
+    # path('', RedirectView.as_view(url='blog/')),  # redirect root URL
+    path('', include("blog.urls")),
     path('admin/', admin.site.urls),
 ]
