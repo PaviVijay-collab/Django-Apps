@@ -10,5 +10,10 @@ urlpatterns = [
     path('old_url', views.old_url_redirect, name="Old Page"),
     path('contact_us', views.contact_us, name="Contact Us"),
     path('about_us', views.about_us, name='About Us'),
-    path('register', views.register, name="Register Form")
+    path('register', views.register, name="Register Form"),
+    path('login', views.login, name="Log in"),
+    path('dashboard', views.dashboard, name="Dashboard"),
+    path('logout', views.logout, name='Log out'),
+    path('forgot_password', views.forgetpassword, name='Forgot Password'),
+    path('reset_password/<uidb64>/<token>', views.reset_password, name='reset_password')
 ]

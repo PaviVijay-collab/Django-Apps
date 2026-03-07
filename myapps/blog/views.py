@@ -6,10 +6,19 @@ from django.urls import reverse
 from django.db.models.functions import Random
 from django.core.paginator import Paginator
 from django.contrib import messages
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
 
 # import models
 from .models import Post, AboutUs
-from .forms import ContactForm, RegisterForm
+from .forms import ContactForm, RegisterForm, LoginForm, ForgotPasswordForm
+
 
 
 import logging
@@ -99,6 +108,64 @@ def register(request):
             user.set_password(form.cleaned_data['password'])
             user.save()
             messages.success(request, "Registration Successfull, You Can log in.")
+            return redirect(reverse("blog:Log in"))
         
 
     return render(request, 'blog/register.html', {'form': form})
+
+
+def login(request):
+    form = LoginForm()
+
+    if request.method == 'POST':
+        # login form
+        form = LoginForm(request.POST)
+
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                auth_login(request, user)
+                print("LOGIN SUCCESS")
+                return redirect("blog:Dashboard") # redirect to dashboard
+        
+    return render(request, 'blog/login.html', {'form': form})
+
+
+def dashboard(request):
+    blog_title = 'My Posts'
+    return render(request, 'blog/dashboard.html', {'title': blog_title})
+
+def logout(request):
+    auth_logout(request)
+    return redirect('blog:Introduction')
+
+def forgetpassword(request):
+    form = ForgotPasswordForm()
+    if request.method == "POST":
+        form = ForgotPasswordForm(request.POST)
+
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            user = User.objects.get(email=email)
+
+            # send email to reset password
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            current_site = get_current_site(request) # 127.0.0.1:8000
+            domain = current_site.domain
+            subject = "Reset Password Requested"
+            message = render_to_string('blog/resetpasswordemail.html', {
+                'domain': domain,
+                'uid': uid,
+                'token': token
+            })
+
+            send_mail(subject, message, 'noreply@abc.com', [email])
+            messages.success(request, "Email has been sent")
+
+    return render(request, 'blog/forgotpassword.html', {'form': form})
+
+def reset_password(request):
+    pass

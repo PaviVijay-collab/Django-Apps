@@ -10,6 +10,13 @@
                 <a class="text-light text-decoration-none" href="/">Home</a>
                 <a class="text-light text-decoration-none" href={% url 'blog:About Us' %}>About</a>
                 <a class="text-light text-decoration-none" href="{% url 'blog:Contact Us' %}">Contact</a>
+                {% if user.is_authenticated %}
+                <a class="text-light text-decoration-none" href="{%url 'blog:Dashboard'%}">Dashboard</a>
+                <a class="text-light text-decoration-none" href="{%url 'blog:Log out'%}">Log Out</a>
+                {% else %}
+                <a class="text-light text-decoration-none" href="{%url 'blog:Register Form'%}">Register</a>
+                <a class="text-light text-decoration-none" href="{%url 'blog:Log in'%}">Login</a>
+                {% endif %}
             </div>
         </div>
     </div>
